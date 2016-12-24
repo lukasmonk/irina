@@ -91,7 +91,11 @@ char *move2str(Move move, char *str_dest)
 /*
  * From Beowulf, from Olithink () (via glaurung)
  */
-#ifndef _WIN32
+#ifndef WIN32
+
+#include <sys/time.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 /* Linux */
 int bioskey()

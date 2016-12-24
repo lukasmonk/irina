@@ -1,12 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <windows.h>
+#ifdef WIN32
+    #include <windows.h>
+#else
+    #include <unistd.h>
+    #define INFINITE 9999
+#endif
+
 #include "defs.h"
 #include "protos.h"
 #include "globals.h"
 
-#define VERSION    "0.11"
+#define VERSION    "0.12"
 
 
 void begin(void)
@@ -51,14 +57,18 @@ void loop(void)
     {
         if (!fgets(s, 2048, stdin))
         {
-            Sleep( 100 );
+            #ifdef WIN32
+                Sleep(100);
+            #else
+                usleep(100000);
+            #endif
             continue;
         }
         if (SCAN("uci"))
         {
             printf("id name Irina %s\n", VERSION);
             printf("id author Lucas Monge\n");
-            printf("option name Hash type spin min 2 max 1024 default 32");
+            printf("option name Hash type spin min 2 max 1024 default 32\n");
             printf("option name Personality type combo default Irina var Irina var Steven var Monkey var Donkey var Bull var Wolf var Lion var Rat var Snake var Material var Random var Capture var Advance\n");
             printf("option name Min Time type spin default 0 min 0 max 99\n");
             printf("option name Max Time type spin default 0 min 0 max 99\n");

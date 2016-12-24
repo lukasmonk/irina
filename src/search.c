@@ -34,6 +34,26 @@ void orderMoves( int ply );
 void quick_sort(int low, int high);
 int repetitions(void);
 
+// void show_move(Move move) {
+    // printf("[%c %s%s ", NAMEPZ[move.piece], POS_AH[move.from], POS_AH[move.to]);
+    // if (move.capture) {
+        // printf("x%c ", NAMEPZ[move.capture]);
+    // }
+    // if (move.promotion) {
+        // printf("prom%c ", NAMEPZ[move.promotion]);
+    // }
+    // if (move.is_ep) {
+        // printf("ep ");
+    // }
+    // if (move.is_2p) {
+        // printf("2p ");
+    // }
+    // if (move.is_castle) {
+        // printf("castle %d ", move.is_castle);
+    // }
+    // printf("]");
+// }
+
 void play(int depth, int time)
 {
     if( is_personality ) return play_person( depth, time );
@@ -264,7 +284,8 @@ int alphaBeta(int alpha, int beta, int depth, int ply, int max_ply)
                 {
                     triangularArray[ply][j] = triangularArray[ply + 1][j];
                 }
-                triangularLength[ply] = triangularLength[ply + 1];
+                if (triangularLength[ply + 1]) triangularLength[ply] = triangularLength[ply + 1];
+                else triangularLength[ply] = 1;
             }
         }
     }

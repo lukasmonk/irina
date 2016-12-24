@@ -112,4 +112,7 @@ void perft(int depth) {
 
 void test(void)
 {
+    char * fen = "8/8/2p5/8/8/4k3/2p1q3/7K w - - 0 2";
+    fen_board(fen);
+    play( 4, 0 );
 }

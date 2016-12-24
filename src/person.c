@@ -1,7 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <windows.h>
+#ifdef WIN32
+    #include <windows.h>
+#else
+    #include <unistd.h>
+#endif
 #include <time.h>
 #include "defs.h"
 #include "protos.h"
@@ -155,7 +159,11 @@ void person_sleep(Bitmap mstime)
 
         while( get_ms() < time_end && !bioskey())
         {
-            Sleep(100);
+            #ifdef WIN32
+                Sleep(100);
+            #else
+                usleep(100000);
+            #endif
         }
     }
 }

@@ -48,8 +48,8 @@ typedef uint64_t   Bitmap;
 
 #define IS_BLACK_PIECE(piece)    ((piece) & 24)
 
-#define MAX_MOVES       4096   // Max number of moves that we can store (all plies)
-#define MAX_PLY         512    // Max search depth
+#define MAX_MOVES     16384   // Max number of moves that we can store (all plies)
+#define MAX_PLY         512   // Max search depth
 #define MAX_HISTORY    1024   // Max number of moves in the (game + search) line that we can store
 
 typedef struct
@@ -90,7 +90,7 @@ typedef struct
    unsigned ply;
    unsigned idx_moves;
    Move     moves[MAX_MOVES];
-   unsigned ply_moves[MAX_PLY];
+   unsigned ply_moves[MAX_HISTORY];
    History  history[MAX_HISTORY];
 } Board;
 
