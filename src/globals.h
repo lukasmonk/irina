@@ -116,6 +116,8 @@ extern int ST_QUEENPOS_B[64];
 extern int ST_KINGPOS_B[64];
 extern int ST_KINGPOS_ENDGAME_B[64];
 
+extern FILE * flog;
+
 
 
 #endif

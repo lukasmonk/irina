@@ -92,4 +92,8 @@ void close_book( void );
 void open_book();
 bool check_book( char * fen, char * move );
 
+// log.c
+void open_log();
+void close_log();
+
 #endif

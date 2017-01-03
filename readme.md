@@ -28,5 +28,3 @@ USA
 
 See the file "copying.txt" for details.
 
-
-
