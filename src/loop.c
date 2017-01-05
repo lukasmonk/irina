@@ -12,7 +12,7 @@
 #include "protos.h"
 #include "globals.h"
 
-#define VERSION "0.14"
+#define VERSION "0.15"
 
 
 void begin(void)

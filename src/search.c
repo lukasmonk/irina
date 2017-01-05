@@ -372,7 +372,6 @@ void orderMoves( int ply )
 int repetitions()
 {
     int i, ilast, rep;
-    char str_move[20];
     Bitmap hashkey = board.hashkey;
     rep = 1;
     ilast = board.ply - board.fifty;

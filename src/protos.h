@@ -7,11 +7,14 @@
 // util.c
 unsigned int bit_count(Bitmap bitmap);
 unsigned int first_one(Bitmap bitmap);
+unsigned int last_one(Bitmap bitmap);
 int ah_pos(char *ah);
 Bitmap get_ms(void);
 int bioskey(void);
 char *move2str(Move move, char *str_dest);
 char *strip(char *txt);
+void show_bitmap(Bitmap bm);
+
 
 
 // perft.c
