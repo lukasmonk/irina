@@ -76,7 +76,12 @@ void loop(void)
         #ifdef LOG
             fprintf(flog, "REC:%s\n", s);
         #endif
-        if (SCAN("uci"))
+        if (SCAN("ucinewgame"))
+        {
+            open_book();
+            continue;
+        }
+        else if (SCAN("uci"))
         {
             printf("id name Irina %s\n", VERSION);
             printf("id author Lucas Monge\n");
@@ -137,11 +142,6 @@ void loop(void)
         {
             num = scan_int(s,"perft");
             perft( num );
-        }
-        else if (SCAN("ucinewgame"))
-        {
-            open_book();
-            continue;
         }
         else if (SCAN("position"))
         {
