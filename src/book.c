@@ -381,7 +381,7 @@ int int_from_file(FILE *f, int l, uint64 *r){
 
 int entry_from_file(FILE *f, entry_t *entry){
     int ret;
-    uint64 r;
+    uint64 r = 0;
     ret=int_from_file(f,8,&r);
     if(ret) return 1;
     entry->key=r;
