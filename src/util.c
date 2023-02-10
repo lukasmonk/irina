@@ -1,6 +1,23 @@
+
+//#define USE_FTIME
+//#define USE_CLOCK_GETTIME
+
+#ifdef USE_FTIME
+// Use ftime()
 #include <sys/timeb.h>
+#else
+#ifdef USE_CLOCK_GETTIME
+// Use clock_gettime()
+#include <time.h>
+#else
+// Use gettimeofday()
+#include <sys/time.h>
+#endif
+#endif
+
 #include <string.h>
 #include <ctype.h>
+
 #include "defs.h"
 #include "protos.h"
 #include "globals.h"
@@ -76,10 +93,24 @@ unsigned int last_one(Bitmap bitmap)
 
 Bitmap get_ms()
 {
-    struct timeb buffer;
+#ifdef USE_FTIME
+  struct timeb buffer;
 
-    ftime(&buffer);
-    return (buffer.time * 1000) +buffer.millitm;
+  ftime(&buffer);
+  return buffer.time * 1E3 + buffer.millitm;
+#else
+#ifdef USE_CLOCK_GETTIME
+  struct timespec start;
+
+  clock_gettime(CLOCK_REALTIME, &start);
+  return start.tv_sec * 1E3 + start.tv_nsec / 1E6;
+#else
+  struct timeval tv;
+
+  gettimeofday(&tv, NULL);
+  return tv.tv_sec * 1E3 + tv.tv_usec / 1E3;
+#endif
+#endif
 }
 
 int ah_pos(char *ah)
