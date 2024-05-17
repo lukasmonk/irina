@@ -1,19 +1,12 @@
 Irina
 =====
 
-It is a free adaptation of [Winglet](http://kirr.homeunix.org/chess/engines/Jim%20Ablett/WINGLET/), chess engine created by Stef Luijten.
 
-Used to implement child personalities of [Lucas Chess](https://lucaschess.pythonanywhere.com).
+It is a free adaptation of Winglet, chess engine created by Stef Luijten.
+[Sources of Winglet](http://aghaznawi.comuf.com/computer%20chess/winglet/index.htm)
 
-Logo
-----
+Used to implement child personalities of Lucas Chess.
 
-![logo](./irina.bmp)
-
-Homepage
---------
-
-https://github.com/lukasmonk/irina
 
 Legal Details
 -------------
@@ -33,4 +26,5 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307
 USA
 
-See the file "COPYING.txt" for details.
+See the file "copying.txt" for details.
+

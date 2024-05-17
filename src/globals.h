@@ -28,6 +28,8 @@ extern int    CHECK_MATE;
 
 extern Bitmap inodes;
 
+extern int npslimit;
+
 extern Bitmap HASH_keys[64][16];
 extern Bitmap HASH_ep[64];
 extern Bitmap HASH_wk;
@@ -46,6 +48,7 @@ extern Bitmap FILA_MASK[64];
 extern Bitmap COLUMNA_MASK[64];
 
 extern int PAWNPOS_W[64];
+extern int PAWNPOS_ENDGAME_W[64];
 extern int KNIGHTPOS_W[64];
 extern int BISHOPPOS_W[64];
 extern int ROOKPOS_W[64];
@@ -53,6 +56,7 @@ extern int QUEENPOS_W[64];
 extern int KINGPOS_W[64];
 extern int KINGPOS_ENDGAME_W[64];
 extern int PAWNPOS_B[64];
+extern int PAWNPOS_ENDGAME_B[64];
 extern int KNIGHTPOS_B[64];
 extern int BISHOPPOS_B[64];
 extern int ROOKPOS_B[64];

@@ -1,9 +1,11 @@
 ifeq ($(OS),Windows_NT)
 LINK_TARGET = irina.exe
 RM = del /Q
+DWIN= -DWIN32
 else
 LINK_TARGET = irina
 RM = rm -f
+DWIN=
 endif
 
 OBJS = main.o loop.o board.o data.o util.o movegen.o makemove.o perft.o eval.o evalst.o search.o person.o hash.o book.o
@@ -22,4 +24,4 @@ $(LINK_TARGET): $(OBJS)
 	strip $(LINK_TARGET)
 
 %.o: %.c
-	gcc -Wall -O3 -o $@ -c $< -DNDEBUG
+	gcc -Wall -O3 -o $@ -c $< -DNDEBUG $(DWIN)

@@ -179,7 +179,8 @@ int eval() {
         square = first_one(temp);
 
         // - position on the board
-        score += PAWNPOS_W[square];
+        if(endgame) score += PAWNPOS_ENDGAME_W[square];
+        else score += PAWNPOS_W[square];
 
         // - distance from opponent king
         score += PAWN_OPPONENT_DISTANCE[DISTANCE[square][blackkingsquare]];
@@ -206,6 +207,7 @@ int eval() {
 
         temp ^= BITSET[square];
     }
+
 
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     // Evaluate white knights
@@ -308,14 +310,15 @@ int eval() {
     temp = board.black_pawns;
     while (temp) {
         square = first_one(temp);
-        score -= PAWNPOS_B[square];
+        if(endgame) score -= PAWNPOS_ENDGAME_B[square];
+        else score -= PAWNPOS_B[square];
         temp ^= BITSET[square];
 
         // - distance from opponent king
-        score += PAWN_OPPONENT_DISTANCE[DISTANCE[square][whitekingsquare]];
+        score -= PAWN_OPPONENT_DISTANCE[DISTANCE[square][whitekingsquare]];
 
         // - distance from own king
-        if (endgame) score += PAWN_OWN_DISTANCE[DISTANCE[square][blackkingsquare]];
+        if (endgame) score -= PAWN_OWN_DISTANCE[DISTANCE[square][blackkingsquare]];
 
         // - passed, doubled, isolated or backward pawns
         if (!(PASSED_BLACK[square] & board.white_pawns)) {

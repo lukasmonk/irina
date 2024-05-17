@@ -40,6 +40,8 @@ Bitmap COLUMNA_MASK[64];
 
 Bitmap inodes;
 
+int npslimit;
+
 
 char *POS_AH[64] =
 {
@@ -71,6 +73,17 @@ int PAWNPOS_W[64] =
     0,   0,   0,   0,   0,   0,   0,   0
 };
 
+int PAWNPOS_ENDGAME_W[64] =
+{
+    0,   0,   0,   0,   0,   0,   0,   0,
+    50,  50,  50,  50,  50,  50,  50,  50,
+    30,  30,  30,  30,  30,  30,  30,  30,
+    20,   20,  20,  20,  20,  20,   20,  20,
+    10,  10,   10,  10,  10,  10,  10,  10,
+    5,  5,  5,   5,   5,  5,   5,   5,
+    0,  0,  0,   0,   0,  0,  0,   0,
+    0,  0,  0,   0,   0,  0,  0,   0
+};
 
 int KNIGHTPOS_W[64] =
 {
@@ -157,6 +170,7 @@ int MIRROR[64] =
 };
 
 int PAWNPOS_B[64];
+int PAWNPOS_ENDGAME_B[64];
 int KNIGHTPOS_B[64];
 int BISHOPPOS_B[64];
 int ROOKPOS_B[64];
@@ -170,7 +184,7 @@ int PENALTY_BACKWARD_PAWN         =  8;
 int BONUS_PASSED_PAWN             = 20;
 int BONUS_BISHOP_PAIR             = 10;
 int BONUS_ROOK_BEHIND_PASSED_PAWN = 20;
-int BONUS_ROOK_ON_OPEN_FILE       = 20;
+int BONUS_ROOK_ON_OPEN_FILE       = 18;
 int BONUS_TWO_ROOKS_ON_OPEN_FILE  = 5;
 
 int BONUS_PAWN_SHIELD_STRONG = 9;
@@ -199,6 +213,8 @@ void init_data(void)
     int i, square;
     int from, to, col_from, col_to, fil_from, fil_to, dif_fil, dif_col;
     Bitmap tmp, fb, cb;
+
+    npslimit = 0;
 
     BITSET[0] = 1;
     for (i = 1; i < 64; i++)
@@ -600,6 +616,7 @@ void init_data(void)
     for (i = 0; i < 64; i++)
     {
         PAWNPOS_B[i] = PAWNPOS_W[i];
+        PAWNPOS_ENDGAME_B[i] = PAWNPOS_ENDGAME_W[i];
         KNIGHTPOS_B[i] = KNIGHTPOS_W[i];
         BISHOPPOS_B[i] = BISHOPPOS_W[i];
         ROOKPOS_B[i] = ROOKPOS_W[i];
@@ -611,6 +628,7 @@ void init_data(void)
     for (i = 0; i < 64; i++)
     {
         PAWNPOS_W[i] = PAWNPOS_B[MIRROR[i]];
+        PAWNPOS_ENDGAME_W[i] = PAWNPOS_ENDGAME_B[MIRROR[i]];
         KNIGHTPOS_W[i] = KNIGHTPOS_B[MIRROR[i]];
         BISHOPPOS_W[i] = BISHOPPOS_B[MIRROR[i]];
         ROOKPOS_W[i] = ROOKPOS_B[MIRROR[i]];

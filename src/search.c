@@ -1,6 +1,13 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <string.h>
+#ifdef WIN32
+    #include <windows.h>
+#else
+    #include <unistd.h>
+#endif
+#include <time.h>
 
 #include "defs.h"
 #include "protos.h"
@@ -56,21 +63,40 @@ void quick_sort(int low, int high);
     // printf("]");
 // }
 
-void play(int depth, int time)
+void test_npslimit()
 {
-    if( is_personality ) return play_person( depth, time );
-    else play_irina( depth, time );
+    long unsigned int nps, ms;
+
+    if(npslimit == 0) return;
+
+    ms = get_ms() - time_ini;
+    if(ms==0) ms = 1;
+    nps = (long unsigned int) (inodes * 1000 / ms);
+
+    while (nps > npslimit)
+    {
+        #ifdef WIN32
+            Sleep(10);
+        #else
+            usleep(10000);
+        #endif
+        ms = get_ms() - time_ini;
+        if(ms==0) ms = 1;
+        nps = (long unsigned int) (inodes * 1000 / ms);
+        if ((time_end && (time_end < get_ms())) || bioskey())
+        {
+            ok_time_kb = false;
+            break;
+        }
+    }
+
+
 }
 
-void play_irina(int depth, int time)
+void play(int depth, int time)
 {
-    int score;
-    int i;
-    char str_score[20];
-    char str_move[20];
-    char bestmove[6], ponder[6];
-    Bitmap ms;
     char fen[100];
+    char bestmove[6];
 
     if( using_book() )
     {
@@ -88,6 +114,19 @@ void play_irina(int depth, int time)
             close_book();
         }
     }
+
+    if( is_personality ) return play_person( depth, time );
+    else play_irina( depth, time );
+}
+
+void play_irina(int depth, int time)
+{
+    int score;
+    int i;
+    char str_score[20];
+    char str_move[20];
+    char bestmove[6], ponder[6];
+    Bitmap ms;
 
     ok_time_kb = true;
     time_ini = get_ms();
@@ -122,6 +161,7 @@ void play_irina(int depth, int time)
             {
                 sprintf(str_score, "cp %d", score);
             }
+            test_npslimit();
             ms = get_ms() - time_ini;
             if (ms == 0)
             {
@@ -130,6 +170,7 @@ void play_irina(int depth, int time)
             printf("info depth %d score %s time %lu nodes %lu nps %lu pv",
                    working_depth, str_score, (long unsigned int) ms, (long unsigned int) inodes,
                    (long unsigned int) (inodes * 1000 / ms));
+
             #ifdef LOG
                 fprintf(flog, "info depth %d score %s time %lu nodes %lu nps %lu pv",
                        working_depth, str_score, (long unsigned int) ms, (long unsigned int) inodes,
@@ -208,9 +249,11 @@ int noMovesScore(int ply)
     return DRAWSCORE;
 }
 
+
 inline void test_time()
 {
     Bitmap ms;
+
     if (--xxx == 0)
     {
         ms = get_ms();
@@ -272,6 +315,7 @@ int quiescence(int alpha, int beta, int ply, int max_ply)
     {
         make_move(board.moves[k]);
         inodes++;
+        if(npslimit) test_npslimit();
         score = -quiescence(-beta, -alpha, ply + 1, max_ply);
         unmake_move();
         if (score >= beta)
@@ -291,6 +335,7 @@ int quiescence(int alpha, int beta, int ply, int max_ply)
     }
     return alpha;
 }
+
 
 int alphaBeta(int alpha, int beta, int depth, int ply, int max_ply)
 {
@@ -324,6 +369,7 @@ int alphaBeta(int alpha, int beta, int depth, int ply, int max_ply)
         move = board.moves[k];
         make_move(move);
         inodes++;
+        if(npslimit) test_npslimit();
         score = -alphaBeta(-beta, -alpha, depth - 1, ply + 1, max_ply);
         unmake_move();
 

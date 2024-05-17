@@ -50,18 +50,29 @@ void set_personality_name(char * value)
 {
     srand(time(NULL));
     is_personality = false;
-    //                                        Rnd Adv  Cap Mat  San   Q    R   B    N    book
-    if(set_personality(value, "Monkey", 100,  0,  0,  0,  0,  0,  0,  0,  0, false)) return;
-    if(set_personality(value, "Donkey",  50, 30, 10, 10,  0,  1,  1,  1,  1, false)) return;
-    if(set_personality(value, "Bull",    40, 40,  5, 15,  0,  2,  1,  1,  1, false)) return;
-    if(set_personality(value, "Wolf",    30, 25, 30, 15,  0,  3,  2,  1,  1, false)) return;
-    if(set_personality(value, "Lion",    20, 15, 30, 30,  5,  5,  3,  2,  2, false)) return;
-    if(set_personality(value, "Rat",     15, 10, 25, 35, 15,  8,  4,  3,  3,  true)) return;
-    if(set_personality(value, "Snake",    5, 15, 20, 40, 20, 10,  5,  3,  3,  true)) return;
-    if(set_personality(value, "Random", 100,  0,  0,  0,  0,  0,  0,  0,  0, false)) return;
-    if(set_personality(value, "Advance",  0,100,  0,  0,  0,  0,  0,  0,  0, false)) return;
-    if(set_personality(value, "Capture",  0,  0,100,  0,  0,  0,  0,  0,  0, false)) return;
-
+    //                                         Rnd   Adv Cap  Mat San   Q    R   B    N    book
+    if(set_personality(value, "Monkey",   100,  0,  0,  0,  0,  0,  0,  0,  0, false)) return;
+    if(set_personality(value, "Donkey",    50, 30, 10, 10,  0,  1,  1,  1,  1, false)) return;
+    if(set_personality(value, "Bull",      40, 40,  5, 15,  0,  2,  1,  1,  1, false)) return;
+    if(set_personality(value, "Wolf",      30, 25, 30, 15,  0,  3,  2,  1,  1, false)) return;
+    if(set_personality(value, "Lion",      20, 15, 30, 30,  5,  5,  3,  2,  2, false)) return;
+    if(set_personality(value, "Rat",       15, 10, 25, 35, 15,  8,  4,  3,  3,  true)) return;
+    if(set_personality(value, "Snake",      5, 15, 20, 40, 20, 10,  5,  3,  3,  true)) return;
+    if(set_personality(value, "Horse",      0,  3,  0,  0, 97,  9,  5,  3,  3, false)) return;
+    if(set_personality(value, "Panda",      0,  3,  0,  5, 92,  9,  5,  3,  3, false)) return;
+    if(set_personality(value, "Deer",      10, 10, 20, 20, 40,  8,  4,  3,  3, false)) return;
+    if(set_personality(value, "Bear",       9,  9, 16, 16, 50, 10,  5,  3,  3, false)) return;
+    if(set_personality(value, "Crocodile",  6,  6, 13, 15, 60,  8,  4,  3,  3, false)) return;
+    if(set_personality(value, "Hippo",      4,  4, 10, 12, 70, 10,  5,  3,  3, false)) return;
+    if(set_personality(value, "Rhino",      3,  3,  4, 10, 80,  8,  4,  3,  3, false)) return;
+    if(set_personality(value, "Shark",      2,  2,  5,  6, 85, 10,  5,  3,  3, false)) return;
+    if(set_personality(value, "Bulldog",    2,  2,  3,  3, 90,  9,  5,  3,  3, false)) return;
+    if(set_personality(value, "Eagle",      1,  1,  2,  2, 94, 10,  5,  3,  3, false)) return;
+    if(set_personality(value, "Tiger",      1,  0,  0,  1, 98,  9,  5,  3,  3, false)) return;
+    if(set_personality(value, "Elephant",   1,  0,  0,  0, 99, 10,  5,  3,  3, false)) return;
+    if(set_personality(value, "Random",   100,  0,  0,  0,  0,  0,  0,  0,  0, false)) return;
+    if(set_personality(value, "Advance",    0,100,  0,  0,  0,  0,  0,  0,  0, false)) return;
+    if(set_personality(value, "Capture",    0,  0,100,  0,  0,  0,  0,  0,  0, false)) return;
     if(!strcmp(value, "Material"))
     {
         functionEval = &eval_material;
@@ -333,7 +344,7 @@ void play_person(int depth, int time)
         play_material(depth, time);
         break;
     case 4:
-        if( depth < 0) depth = 1;
+        //if( depth < 0 && time == 0) depth = 1;
         printf("info string playing Sanity (%d,%d)\n", depth, time);
         play_irina(depth, time);
         break;

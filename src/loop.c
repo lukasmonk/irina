@@ -5,6 +5,11 @@
     #include <windows.h>
 #else
     #include <unistd.h>
+#endif
+#ifdef WIN32
+    #include <windows.h>
+#else
+    #include <unistd.h>
     #define INFINITE 9999
 #endif
 
@@ -12,7 +17,7 @@
 #include "protos.h"
 #include "globals.h"
 
-#define VERSION "0.15"
+#define VERSION "0.17"
 
 
 void begin(void)
@@ -76,21 +81,18 @@ void loop(void)
         #ifdef LOG
             fprintf(flog, "REC:%s\n", s);
         #endif
-        if (SCAN("ucinewgame"))
-        {
-            open_book();
-            continue;
-        }
-        else if (SCAN("uci"))
+        if (SCAN("uci"))
         {
             printf("id name Irina %s\n", VERSION);
             printf("id author Lucas Monge\n");
             printf("option name Hash type spin min 2 max 1024 default 32\n");
-            printf("option name Personality type combo default Irina var Irina var Steven var Monkey var Donkey var Bull var Wolf var Lion var Rat var Snake var Material var Random var Capture var Advance\n");
+            printf("option name Personality type combo default Irina var Irina var Steven var Monkey var Donkey var Bull var Wolf var Lion var Rat var Snake var Panda var Horse var Deer var Bear var Crocodile var Hippo var Rhino var Shark var Bulldog var Eagle var Tiger var Elephant var Material var Random var Capture var Advance\n");
             printf("option name Min Time type spin default 0 min 0 max 99\n");
             printf("option name Max Time type spin default 0 min 0 max 99\n");
             printf("option name OwnBook type check default true\n");
             printf("option name OwnBookFile type string default irina.bin\n");
+            printf("option name NpsLimit type spin default 0 min 0 max 30000\n");
+
             printf("uciok\n");
             #ifdef LOG
                 fprintf(flog, "id name Irina %s\n", VERSION);
@@ -142,6 +144,11 @@ void loop(void)
         {
             num = scan_int(s,"perft");
             perft( num );
+        }
+        else if (SCAN("ucinewgame"))
+        {
+            open_book();
+            continue;
         }
         else if (SCAN("position"))
         {
@@ -392,6 +399,10 @@ void set_option(char *line)
     else if(strcmp(name, "OwnBookFile") == 0)
     {
         set_ownbookfile( value );
+    }
+    else if(strcmp(name, "NpsLimit") == 0)
+    {
+        sscanf(value, "%d", &npslimit);
     }
     /* setoption name <id> [value <x>]
     	this is sent to the engine when the user wants to change the internal parameters

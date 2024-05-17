@@ -112,7 +112,10 @@ void perft(int depth) {
 
 void test(void)
 {
-    char * fen = "8/8/2p5/8/8/4k3/2p1q3/7K w - - 0 2";
-    fen_board(fen);
-    play( 4, 0 );
+    char * fenw = "8/3k4/8/8/8/8/4KPPP/8 w - - 0 1";
+    char * fenb = "8/pppk4/8/8/8/8/4K3/8 b - - 0 1";
+    fen_board(fenb);
+    printf("b: %d\n", eval());
+    fen_board(fenw);
+    printf("w: %d\n", eval());
 }
