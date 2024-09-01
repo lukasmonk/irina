@@ -73,6 +73,7 @@ void set_personality_name(char * value)
     if(set_personality(value, "Random",   100,  0,  0,  0,  0,  0,  0,  0,  0, false)) return;
     if(set_personality(value, "Advance",    0,100,  0,  0,  0,  0,  0,  0,  0, false)) return;
     if(set_personality(value, "Capture",    0,  0,100,  0,  0,  0,  0,  0,  0, false)) return;
+    if(set_personality(value, "Knight",     0,  0,  0, 60, 40,  0,  0,  0,  0,  true)) return;
     if(!strcmp(value, "Material"))
     {
         functionEval = &eval_material;

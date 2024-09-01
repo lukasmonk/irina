@@ -17,7 +17,7 @@
 #include "protos.h"
 #include "globals.h"
 
-#define VERSION "0.17"
+#define VERSION "0.18"
 
 
 void begin(void)
@@ -86,7 +86,7 @@ void loop(void)
             printf("id name Irina %s\n", VERSION);
             printf("id author Lucas Monge\n");
             printf("option name Hash type spin min 2 max 1024 default 32\n");
-            printf("option name Personality type combo default Irina var Irina var Steven var Monkey var Donkey var Bull var Wolf var Lion var Rat var Snake var Panda var Horse var Deer var Bear var Crocodile var Hippo var Rhino var Shark var Bulldog var Eagle var Tiger var Elephant var Material var Random var Capture var Advance\n");
+            printf("option name Personality type combo default Irina var Irina var Steven var Knight var Monkey var Donkey var Bull var Wolf var Lion var Rat var Snake var Panda var Horse var Deer var Bear var Crocodile var Hippo var Rhino var Shark var Bulldog var Eagle var Tiger var Elephant var Material var Random var Capture var Advance\n");
             printf("option name Min Time type spin default 0 min 0 max 99\n");
             printf("option name Max Time type spin default 0 min 0 max 99\n");
             printf("option name OwnBook type check default true\n");
