@@ -8,7 +8,7 @@ RM = rm -f
 DWIN=
 endif
 
-OBJS = main.o loop.o board.o data.o util.o movegen.o makemove.o perft.o eval.o evalst.o search.o person.o hash.o book.o
+OBJS = main.o loop.o board.o data.o util.o movegen.o makemove.o perft.o eval.o evalst.o search.o person.o hash.o tt.o book.o
 
 REBUILDABLES = $(OBJS) $(LINK_TARGET)
 

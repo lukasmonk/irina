@@ -16,21 +16,21 @@ int eval() {
     Bitmap temp;
     int q;
 
-    if( hash_probe(&score) ) return score;
+    // if( hash_probe(&score) ) return score;
 
     whitepawns = bit_count(board.white_pawns);
     whiteknights = bit_count(board.white_knights);
     whitebishops = bit_count(board.white_bishops);
     whiterooks = bit_count(board.white_rooks);
     whitequeens = bit_count(board.white_queens);
-    whitetotalmat = 3 * whiteknights + 3 * whitebishops + 5 * whiterooks + 10 * whitequeens;
+    whitetotalmat = 3 * whiteknights + 3 * whitebishops + 5 * whiterooks + 9 * whitequeens;
     whitetotal = whitepawns + whiteknights + whitebishops + whiterooks + whitequeens;
     blackpawns = bit_count(board.black_pawns);
     blackknights = bit_count(board.black_knights);
     blackbishops = bit_count(board.black_bishops);
     blackrooks = bit_count(board.black_rooks);
     blackqueens = bit_count(board.black_queens);
-    blacktotalmat = 3 * blackknights + 3 * blackbishops + 5 * blackrooks + 10 * blackqueens;
+    blacktotalmat = 3 * blackknights + 3 * blackbishops + 5 * blackrooks + 9 * blackqueens;
     blacktotal = blackpawns + blackknights + blackbishops + blackrooks + blackqueens;
 
 
@@ -141,7 +141,7 @@ int eval() {
     // Anything less than a queen (=10) + rook (=5) is considered endgame
     // (pawns excluded in this count)
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    endgame = (whitetotalmat < 15 || blacktotalmat < 15);
+    endgame = (whitetotalmat + blacktotalmat) <= 16;
 
 
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -432,7 +432,7 @@ int eval() {
         score = -score;
     }
 
-    hash_save(score);
+    // hash_save(score);
     return score;
 }
 

@@ -10,7 +10,6 @@ void init_board()
     fen_board("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 }
 
-
 static Board stb;
 
 void fen_board(char *fen)
@@ -169,8 +168,6 @@ void fen_board(char *fen)
     board.hashkey = board_hashkey();
 
     board_reset();
-
-
 }
 
 void board_reset(void)
@@ -357,3 +354,34 @@ Bitmap board_hashkey(void)
     return h;
 }
 
+bool isEndgame(void)
+{
+
+    int whitepawns, whiteknights, whitebishops, whiterooks, whitequeens;
+    int blackpawns, blackknights, blackbishops, blackrooks, blackqueens;
+    int whitetotalmat, blacktotalmat;
+
+    whitepawns = bit_count(board.white_pawns);
+    whiteknights = bit_count(board.white_knights);
+    whitebishops = bit_count(board.white_bishops);
+    whiterooks = bit_count(board.white_rooks);
+    whitequeens = bit_count(board.white_queens);
+    whitetotalmat = whitepawns + 3 * whiteknights + 3 * whitebishops + 5 * whiterooks + 9 * whitequeens;
+    blackpawns = bit_count(board.black_pawns);
+    blackknights = bit_count(board.black_knights);
+    blackbishops = bit_count(board.black_bishops);
+    blackrooks = bit_count(board.black_rooks);
+    blackqueens = bit_count(board.black_queens);
+    blacktotalmat = blackpawns + 3 * blackknights + 3 * blackbishops + 5 * blackrooks + 9 * blackqueens;
+
+    if ((whitetotalmat + blacktotalmat) <= 16)
+    {
+        return true;
+    }
+
+    // Tambi�n se puede a�adir un chequeo de 'material ligero' como en otros motores:
+    // Si solo quedan 2 o 3 piezas ligeras (Caballo/Alfil) adem�s de los Reyes.
+    // Esto es m�s complejo y no es estrictamente necesario para la primera implementaci�n.
+
+    return false;
+}

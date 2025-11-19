@@ -14,15 +14,17 @@
 #endif
 
 #include "defs.h"
+#include "tt.h"
 #include "protos.h"
 #include "globals.h"
 
-#define VERSION "0.18"
+#define VERSION "0.19"
 
 
 void begin(void)
 {
     init_hash();
+    init_ttTable(HASH_DEFAULT);
     init_data();
     init_board();
     setbuf(stdout, NULL);
@@ -122,6 +124,19 @@ void loop(void)
         {
             break;
         }
+        else if (SCAN("ucinewgame"))
+        {
+            open_book();
+            continue;
+        }
+        else if (SCAN("position"))
+        {
+            set_position(s);
+        }
+        else if (SCAN("go"))
+        {
+            go(s);
+        }
         else if (SCAN("fen"))
         {
             board_fen(s);
@@ -144,19 +159,6 @@ void loop(void)
         {
             num = scan_int(s,"perft");
             perft( num );
-        }
-        else if (SCAN("ucinewgame"))
-        {
-            open_book();
-            continue;
-        }
-        else if (SCAN("position"))
-        {
-            set_position(s);
-        }
-        else if (SCAN("go"))
-        {
-            go(s);
         }
         else if (SCAN("setoption name"))
         {
@@ -390,7 +392,7 @@ void set_option(char *line)
     }
     else if(strcmp(name, "Hash") == 0)
     {
-        set_hash( value );
+        set_hash_ttTable( value );
     }
     else if(strcmp(name, "OwnBook") == 0)
     {

@@ -47,6 +47,8 @@ void fen_board(char *fen);
 void bitmap_pz(unsigned pz[], Bitmap bm, int piece);
 char *board_fen(char *fen);
 Bitmap board_hashkey(void);
+bool isEndgame(void);
+
 
 // movegen.c
 int movegen(void);
@@ -71,9 +73,9 @@ int repetitions(void);
 // hash.c
 Bitmap rand64();
 void init_hash();
-void set_hash(char * value);
-void hash_save(int val);
-bool hash_probe(int * val);
+// void set_hash(char * value);
+// void hash_save(int val);
+// bool hash_probe(int * val);
 
 // person.c
 void set_personality_name(char * value);

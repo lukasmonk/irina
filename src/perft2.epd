@@ -1,0 +1,21 @@
+id gentest-1
+epd rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq -
+perft 1 20
+perft 2 400
+perft 3 8902
+perft 4 197281
+perft 5 4865609
+perft 6 119060324
+
+id gentest-11
+#long castling gives check:
+epd 3k4/8/8/8/8/8/8/R3K3 w Q -
+perft 1 16
+perft 2 71
+perft 3 1286
+perft 6 803711
+
+id gentest-12
+epd r3k3/8/8/8/8/8/8/3K4 b q -
+perft 6 803711
+
