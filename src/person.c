@@ -285,7 +285,7 @@ void play_advance(int depth, int time)
     int sel = 0;
     int min_distance, dist;
     int i;
-    int rivalking = first_one((board.color) ? board.white_king : board.black_king);
+    int rivalking = first_one((board.side) ? board.white_king : board.black_king);
 
     all_moves();
     min_distance = 99;

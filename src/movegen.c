@@ -21,7 +21,7 @@ int movegen(void) {
     // Black to move
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    if (board.color)
+    if (board.side)
     {
         targetBitmap = ~board.black_pieces; // we cannot capture one of our own pieces!
 
@@ -496,7 +496,7 @@ void addMove(Move move) {
     all_pieces ^= BITSET[move.from];
     all_pieces |= BITSET[move.to];
 
-    if (board.color) {
+    if (board.side) {
         if (move.piece == BLACK_KING) {
             kpos = move.to;
         } else {
@@ -649,17 +649,17 @@ void addMove(Move move) {
 }
 
 bool inCheck(void) {
-    if (board.color) {
-        return isAttacked(board.black_king, !board.color);
+    if (board.side) {
+        return isAttacked(board.black_king, !board.side);
     }
-    return isAttacked(board.white_king, !board.color);
+    return isAttacked(board.white_king, !board.side);
 }
 
 bool inCheckOther(void) {
-    if (board.color) {
-        return isAttacked(board.white_king, !board.color);
+    if (board.side) {
+        return isAttacked(board.white_king, !board.side);
     }
-    return isAttacked(board.black_king, !board.color);
+    return isAttacked(board.black_king, !board.side);
 }
 
 unsigned int movegenCaptures(void) {
@@ -677,7 +677,7 @@ unsigned int movegenCaptures(void) {
     // Black to move
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    if (board.color) // black to move
+    if (board.side) // black to move
     {
         targetBitmap = board.white_pieces;
 

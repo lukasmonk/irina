@@ -16,21 +16,19 @@ int eval() {
     Bitmap temp;
     int q;
 
-    // if( hash_probe(&score) ) return score;
-
     whitepawns = bit_count(board.white_pawns);
     whiteknights = bit_count(board.white_knights);
     whitebishops = bit_count(board.white_bishops);
     whiterooks = bit_count(board.white_rooks);
     whitequeens = bit_count(board.white_queens);
-    whitetotalmat = 3 * whiteknights + 3 * whitebishops + 5 * whiterooks + 9 * whitequeens;
+    whitetotalmat = 3 * whiteknights + 3 * whitebishops + 5 * whiterooks + 10 * whitequeens;
     whitetotal = whitepawns + whiteknights + whitebishops + whiterooks + whitequeens;
     blackpawns = bit_count(board.black_pawns);
     blackknights = bit_count(board.black_knights);
     blackbishops = bit_count(board.black_bishops);
     blackrooks = bit_count(board.black_rooks);
     blackqueens = bit_count(board.black_queens);
-    blacktotalmat = 3 * blackknights + 3 * blackbishops + 5 * blackrooks + 9 * blackqueens;
+    blacktotalmat = 3 * blackknights + 3 * blackbishops + 5 * blackrooks + 10 * blackqueens;
     blacktotal = blackpawns + blackknights + blackbishops + blackrooks + blackqueens;
 
 
@@ -40,12 +38,12 @@ int eval() {
     if (board.white_king) {
         whitekingsquare = first_one(board.white_king);
     } else {
-        return (board.color) ? MATESCORE : -MATESCORE;
+        return (board.side) ? MATESCORE : -MATESCORE;
     }
     if (board.black_king) {
         blackkingsquare = first_one(board.black_king);
     } else {
-        return (board.color) ? -MATESCORE : +MATESCORE;
+        return (board.side) ? -MATESCORE : +MATESCORE;
     }
 
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -54,7 +52,7 @@ int eval() {
     if (!whitepawns && !blackpawns) {
         // king versus king:
         if ((whitetotalmat == 0) && (blacktotalmat == 0)) {
-            if (board.color) {
+            if (board.side) {
                 return -DRAWSCORE;
             } else {
                 return DRAWSCORE;
@@ -64,7 +62,7 @@ int eval() {
         // king and knight versus king:
         if (((whitetotalmat == 3) && (whiteknights == 1) && (blacktotalmat == 0)) ||
                 ((blacktotalmat == 3) && (blackknights == 1) && (whitetotalmat == 0))) {
-            if (board.color) {
+            if (board.side) {
                 return -DRAWSCORE;
             } else {
                 return DRAWSCORE;
@@ -141,7 +139,7 @@ int eval() {
     // Anything less than a queen (=10) + rook (=5) is considered endgame
     // (pawns excluded in this count)
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    endgame = (whitetotalmat + blacktotalmat) <= 16;
+    endgame = (whitetotalmat < 15 || blacktotalmat < 15);
 
 
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -428,11 +426,10 @@ int eval() {
     // Return the score
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    if (board.color) {
+    if (board.side) {
         score = -score;
     }
 
-    // hash_save(score);
     return score;
 }
 
@@ -459,6 +456,6 @@ int eval_material()
             (whiterooks-blackrooks) * ROOK_VALUE +
             (whitequeens-blackqueens) * QUEEN_VALUE;
 
-    if (board.color) return -score;
+    if (board.side) return -score;
     else return +score;
 }

@@ -2,7 +2,7 @@
 #define IRINA_DEFS_H
 #include <stdio.h>
 
-typedef signed char bool;
+typedef unsigned char bool;
 #define true 1
 #define false 0
 
@@ -82,7 +82,7 @@ typedef struct
    Bitmap   white_king, white_queens, white_rooks, white_bishops, white_knights, white_pawns;
    Bitmap   black_king, black_queens, black_rooks, black_bishops, black_knights, black_pawns;
    Bitmap   white_pieces, black_pieces, all_pieces;
-   bool     color;
+   bool     side;
    unsigned castle;
    unsigned ep;
    unsigned fifty;
@@ -94,6 +94,24 @@ typedef struct
    Move     moves[MAX_MOVES];
    unsigned ply_moves[MAX_HISTORY];
    History  history[MAX_HISTORY];
+
+    // Información de tablas hash para evaluaciones
+    uint64_t pawn_hash;  // Hash específico para estructura de peones
+    uint64_t material_hash; // Hash para configuración material
+    
+    // Cache de ataques y movilidad
+    Bitmap white_attacks;
+    Bitmap black_attacks;
+    Bitmap attacked_squares[2];
+    
+    // Información de estructura de peones
+    int pawn_king_files[2]; // Archivos de peones cerca del rey
+    Bitmap passed_pawns[2];
+    Bitmap isolated_pawns[2];
+    Bitmap doubled_pawns[2];
+    
+    // Información de movilidad
+    int mobility[2][7]; // movilidad por pieza y color
 } Board;
 
 #define FILA(x)       ((x) / 8)

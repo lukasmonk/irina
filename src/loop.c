@@ -18,7 +18,7 @@
 #include "protos.h"
 #include "globals.h"
 
-#define VERSION "0.19"
+#define VERSION "0.20"
 
 
 void begin(void)
@@ -292,7 +292,7 @@ void go(char *line)
         {
             movestogo = 40;
         }
-        if (board.color)
+        if (board.side)
         {
             movetime = btime + movestogo * binc;
         }

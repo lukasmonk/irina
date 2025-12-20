@@ -145,12 +145,12 @@ int eval_steven(void) {
     if (board.white_king) {
         whitekingsquare = first_one(board.white_king);
     } else {
-        return (board.color) ? MATESCORE : -MATESCORE;
+        return (board.side) ? MATESCORE : -MATESCORE;
     }
     if (board.black_king) {
         blackkingsquare = first_one(board.black_king);
     } else {
-        return (board.color) ? -MATESCORE : +MATESCORE;
+        return (board.side) ? -MATESCORE : +MATESCORE;
     }
 
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -159,7 +159,7 @@ int eval_steven(void) {
     if (!whitepawns && !blackpawns) {
         // king versus king:
         if ((whitetotalmat == 0) && (blacktotalmat == 0)) {
-            if (board.color) {
+            if (board.side) {
                 return -DRAWSCORE;
             } else {
                 return DRAWSCORE;
@@ -169,7 +169,7 @@ int eval_steven(void) {
         // king and knight versus king:
         if (((whitetotalmat == 3) && (whiteknights == 1) && (blacktotalmat == 0)) ||
                 ((blacktotalmat == 3) && (blackknights == 1) && (whitetotalmat == 0))) {
-            if (board.color) {
+            if (board.side) {
                 return -DRAWSCORE;
             } else {
                 return DRAWSCORE;
@@ -393,7 +393,7 @@ int eval_steven(void) {
     // Return the score
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-    if (board.color) {
+    if (board.side) {
         return -score;
     } else {
         return +score;

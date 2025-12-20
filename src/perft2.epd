@@ -1,3 +1,8 @@
+id gentest-0
+epd r3k2r/p1ppqpb1/bn2pnp1/3PN3/1p2P3/2N2Q1p/PPPBBPPP/R3K2R w KQkq -
+perft 1 244
+
+
 id gentest-1
 epd rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq -
 perft 1 20

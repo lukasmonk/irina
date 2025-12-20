@@ -1,27 +1,34 @@
 ifeq ($(OS),Windows_NT)
 LINK_TARGET = irina.exe
-RM = del /Q
 DWIN= -DWIN32
 else
 LINK_TARGET = irina
-RM = rm -f
 DWIN=
 endif
 
-OBJS = main.o loop.o board.o data.o util.o movegen.o makemove.o perft.o eval.o evalst.o search.o person.o hash.o tt.o book.o
+RM = rm -f
+
+OBJS = build/main.o build/loop.o build/board.o build/data.o build/util.o build/movegen.o build/makemove.o build/perft.o build/eval.o build/evalst.o build/search.o build/person.o build/hash.o build/tt.o build/book.o
 
 REBUILDABLES = $(OBJS) $(LINK_TARGET)
 
+MKDIR = mkdir -p build
+RMDIR = rm -rf build
+
 clean:
 	$(RM) $(REBUILDABLES)
+	$(RMDIR)
 	echo Clean done
 
 all: $(LINK_TARGET)
 	echo All done
 
 $(LINK_TARGET): $(OBJS)
-	gcc -O3 -o $@ $^ -DNDEBUG
+	gcc -flto -O3 -o $@ $^ -DNDEBUG
 	strip $(LINK_TARGET)
 
-%.o: %.c
-	gcc -Wall -O3 -o $@ -c $< -DNDEBUG $(DWIN)
+build/%.o: %.c | build
+	gcc -Wall -flto -O3 -o $@ -c $< -DNDEBUG $(DWIN)
+
+build:
+	$(MKDIR)

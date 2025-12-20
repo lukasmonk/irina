@@ -331,7 +331,7 @@ void make_move(Move move) {
         }
     }
 
-    board.color = !board.color;
+    board.side = !board.side;
     board.hashkey ^= HASH_side;
 }
 
@@ -581,5 +581,5 @@ void unmake_move(void) {
     }
 
 
-    board.color = !board.color;
+    board.side = !board.side;
 }

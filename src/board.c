@@ -10,20 +10,21 @@ void init_board()
     fen_board("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 }
 
+
 static Board stb;
 
 void fen_board(char *fen)
 {
     int i, f, c;
     char xmoves[256];
-    char xcolor[2];
+    char xside[2];
     char xcastle[5];
     char xep[3];
 
     // board = (Board){ 0 };
     board = stb;
 
-    sscanf(fen, "%s %s %s %s %d %d", xmoves, xcolor, xcastle, xep, &board.fifty, &board.fullmove);
+    sscanf(fen, "%s %s %s %s %d %d", xmoves, xside, xcastle, xep, &board.fifty, &board.fullmove);
 
     i = 0;
     f = 7;
@@ -130,7 +131,7 @@ void fen_board(char *fen)
     board.black_pieces = board.black_king | board.black_queens | board.black_rooks | board.black_bishops | board.black_knights | board.black_pawns;
     board.all_pieces = board.white_pieces | board.black_pieces;
 
-    board.color = xcolor[0] == 'w' ? WHITE : BLACK;
+    board.side = xside[0] == 'w' ? WHITE : BLACK;
 
     board.castle = 0;
     if (strchr(xcastle, 'K'))
@@ -168,6 +169,8 @@ void fen_board(char *fen)
     board.hashkey = board_hashkey();
 
     board_reset();
+
+
 }
 
 void board_reset(void)
@@ -233,7 +236,7 @@ char *board_fen(char *fen)
     }
     fen[pos++] = ' ';
 
-    fen[pos++] = board.color == WHITE ? 'w' : 'b';
+    fen[pos++] = board.side == WHITE ? 'w' : 'b';
     fen[pos++] = ' ';
 
     if (board.castle)
@@ -346,13 +349,15 @@ Bitmap board_hashkey(void)
     {
         h ^= HASH_ep[board.ep];
     }
-    if (board.color)
+    if (board.side)
     {
         h ^= HASH_side;
     }
 
     return h;
 }
+
+
 
 bool isEndgame(void)
 {
