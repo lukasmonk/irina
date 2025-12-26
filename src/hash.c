@@ -4,7 +4,7 @@
 #include "defs.h"
 #include "protos.h"
 #include "globals.h"
-
+// #include "hash.h"
 
 
 Bitmap HASH_keys[64][16];

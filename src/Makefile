@@ -24,11 +24,11 @@ all: $(LINK_TARGET)
 	echo All done
 
 $(LINK_TARGET): $(OBJS)
-	gcc -flto -O3 -o $@ $^ -DNDEBUG
+	gcc -flto=auto -O3 -o $@ $^ -DNDEBUG -m64 -msse2 -mtune=generic
 	strip $(LINK_TARGET)
 
 build/%.o: %.c | build
-	gcc -Wall -flto -O3 -o $@ -c $< -DNDEBUG $(DWIN)
+	gcc -Wall -flto=auto -O3 -m64 -msse2 -mtune=generic -o $@ -c $< -DNDEBUG $(DWIN)
 
 build:
 	$(MKDIR)
