@@ -252,7 +252,7 @@ int noMovesScore(int ply)
 }
 
 
-inline void test_time()
+void test_time()
 {
     Bitmap ms;
 
