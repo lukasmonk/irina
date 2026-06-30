@@ -2,9 +2,7 @@
 #define IRINA_DEFS_H
 #include <stdio.h>
 
-typedef unsigned char bool;
-#define true 1
-#define false 0
+#include <stdbool.h>
 
 typedef signed char int8_t;
 typedef unsigned char   uint8_t;

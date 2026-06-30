@@ -325,6 +325,7 @@ void play_material(int depth, int mstime)
 void play_person(int depth, int time)
 {
     int x[] = {person_random, person_advance, person_capture, person_material, person_sanity};
+    time = time / 4;
     switch (randchoice(5, x))
     {
     case 0:

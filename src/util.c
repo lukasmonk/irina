@@ -1,3 +1,6 @@
+#ifdef WIN32
+#include <windows.h>
+#endif
 
 //#define USE_FTIME
 //#define USE_CLOCK_GETTIME
@@ -199,7 +202,6 @@ int bioskey()
 #else
 
 /* Windows */
-#include <windows.h>
 #include <conio.h>
 
 int bioskey()

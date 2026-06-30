@@ -18,7 +18,7 @@
 #include "protos.h"
 #include "globals.h"
 
-#define VERSION "0.21"
+#define VERSION "0.22"
 
 
 void begin(void)
@@ -118,6 +118,7 @@ void loop(void)
         }
         else if (SCAN("stop"))
         {
+            stop_search();
             continue;
         }
         else if (SCAN("quit"))
@@ -127,6 +128,7 @@ void loop(void)
         else if (SCAN("ucinewgame"))
         {
             open_book();
+            clear_ttTable();
             continue;
         }
         else if (SCAN("position"))

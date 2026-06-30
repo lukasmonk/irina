@@ -19,6 +19,11 @@ void init_ttTable(int max_mb)
 }
 
 
+void clear_ttTable(void)
+{
+    memset(ttTable, 0, sizeof(TtEntry) * register_max);
+}
+
 void set_hash_ttTable(char * value)
 {
     int mb;

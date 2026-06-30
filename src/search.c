@@ -121,6 +121,12 @@ void play(int depth, int time)
     else play_irina( depth, time );
 }
 
+void stop_search(void)
+{
+    ok_time_kb = false;
+    time_end = 1;
+}
+
 void play_irina(int depth, int time)
 {
     int score;
@@ -213,6 +219,14 @@ void play_irina(int depth, int time)
                 move2str(triangularArray[0][1], ponder);
             }
         }
+        else
+        {
+            movegen();
+            if (board.idx_moves > board.ply_moves[0])
+            {
+                move2str(board.moves[board.ply_moves[0]], bestmove);
+            }
+        }
     }
     if (bestmove[0])
     {
@@ -298,10 +312,7 @@ void make_null_move()
     board.history[board.ply].castle = board.castle;
     board.history[board.ply].fifty = board.fifty;
 
-    // 2. Actualizar el Hash Zobrist (CRUCIAL)
-
-    // Quitar la clave del lado a mover actual (ej. BLANCO)
-    board.hashkey ^= HASH_side;;
+    // 2. Actualizar el Hash Zobrist
 
     // Quitar el hash de la casilla En Passant actual (si existe)
     if (board.ep != EMPTY) {
@@ -312,20 +323,17 @@ void make_null_move()
 
     // Cambiar el turno: Blanco -> Negro, o Negro -> Blanco
     board.side ^= 1;
+    // Ajustar el hash para el nuevo lado
+    board.hashkey ^= HASH_side;
 
-    // Aumentar la profundidad (ply) para el pr?ximo movimiento
+    // Aumentar la profundidad (ply)
     board.ply++;
 
     // El movimiento nulo elimina la posibilidad de En Passant
     board.ep = EMPTY;
 
-    // La regla de 50 movimientos aumenta (como si fuera un movimiento sin captura)
+    // La regla de 50 movimientos aumenta
     board.fifty++;
-
-    // 4. Actualizar el Hash Zobrist despues del cambio
-
-    // Poner la clave del nuevo lado a mover (el mismo ZOBRIST_SIDE)
-    board.hashkey ^= HASH_side;
 }
 
 void unmake_null_move()
@@ -552,7 +560,7 @@ int repetitions()
             if( historia[i] == hashkey ) rep++;
         }
     }
-    for (i = board.ply - 2; i >= ilast && i; i -= 2)
+    for (i = board.ply - 2; i >= ilast && i > 0; i -= 2)
     {
         if (board.history[i].hashkey == hashkey) rep++;
     }

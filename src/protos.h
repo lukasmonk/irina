@@ -1,6 +1,7 @@
 #ifndef IRINA_PROTOS_H
 #define IRINA_PROTOS_H
 
+#include <stdarg.h>
 #include "defs.h"
 
 
@@ -65,6 +66,7 @@ void unmake_move(void);
 // search.c
 void play(int depth, int time);
 void play_irina(int depth, int time);
+void stop_search(void);
 int alphaBeta(int alpha, int beta, int depthleft, int ply, int max_ply);
 int quiescence(int alpha, int beta, int ply, int max_ply);
 int alphaBetaFast(int alpha, int beta, int depth, int ply, int max_ply);
