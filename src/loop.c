@@ -18,7 +18,7 @@
 #include "protos.h"
 #include "globals.h"
 
-#define VERSION "0.22"
+#define VERSION "0.23"
 
 
 void begin(void)
@@ -67,10 +67,9 @@ void loop(void)
         open_log();
     #endif
 
-    printf("Irina is a free adaptation of Winglet, chess engine created by Stef Luijten.\nUsed to implement child personalities of Lucas Chess GUI.\n\n");
-
     for (;;)
     {
+        s[0] = '\0';
         if (!fgets(s, 2048, stdin))
         {
             #ifdef WIN32
@@ -80,10 +79,17 @@ void loop(void)
             #endif
             continue;
         }
+        strip(s);
         #ifdef LOG
             fprintf(flog, "REC:%s\n", s);
         #endif
-        if (SCAN("uci"))
+        if (SCAN("ucinewgame"))
+        {
+            open_book();
+            clear_ttTable();
+            continue;
+        }
+        else if (SCAN("uci"))
         {
             printf("id name Irina %s\n", VERSION);
             printf("id author Lucas Monge\n");
@@ -96,6 +102,8 @@ void loop(void)
             printf("option name NpsLimit type spin default 0 min 0 max 30000\n");
 
             printf("uciok\n");
+            fflush(stdout);
+
             #ifdef LOG
                 fprintf(flog, "id name Irina %s\n", VERSION);
                 fprintf(flog, "id author Lucas Monge\n");
@@ -105,6 +113,7 @@ void loop(void)
                 fprintf(flog, "option name Max Time type spin default 0 min 0 max 99\n");
                 fprintf(flog, "option name OwnBook type check default true\n");
                 fprintf(flog, "option name OwnBookFile type string default irina.bin\n");
+                printf("option name NpsLimit type spin default 0 min 0 max 30000\n");
                 fprintf(flog, "uciok\n");
             #endif
 
@@ -112,6 +121,7 @@ void loop(void)
         else if (SCAN("isready"))
         {
             printf("readyok\n");
+            fflush(stdout);
             #ifdef LOG
                 fprintf(flog, "readyok\n");
             #endif
@@ -124,12 +134,6 @@ void loop(void)
         else if (SCAN("quit"))
         {
             break;
-        }
-        else if (SCAN("ucinewgame"))
-        {
-            open_book();
-            clear_ttTable();
-            continue;
         }
         else if (SCAN("position"))
         {

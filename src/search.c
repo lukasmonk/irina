@@ -31,6 +31,11 @@ Move triangularArray[MAX_PLY][MAX_PLY];
 Bitmap historia[MAX_PLY];
 int len_historia;
 
+Move killer_moves[MAX_PLY][2];
+int history[16][64];
+
+static int piece_mvv[8] = {0, 100, 0, 320, 0, 330, 500, 900};
+
 typedef struct MoveOrder
 {
     Move move;
@@ -147,6 +152,9 @@ void play_irina(int depth, int time)
     ponder[0] = '\0';
     if (depth<=0) depth = 120;
 
+    memset(killer_moves, 0, sizeof(killer_moves));
+    memset(history, 0, sizeof(history));
+
     len_historia = board.ply;
     for(i=0; i < board.ply; i++)
         historia[i] = board.history[i].hashkey;
@@ -230,6 +238,27 @@ void play_irina(int depth, int time)
     }
     if (bestmove[0])
     {
+        // Validate ponder move before sending to GUI
+        if (ponder[0]) {
+            unsigned int save_ply = board.ply;
+            unsigned int save_idx = board.idx_moves;
+            make_move(triangularArray[0][0]);
+            unsigned int gen_start = board.idx_moves;
+            movegen();
+            char tmp[6];
+            int i;
+            bool found = false;
+            for (i = gen_start; i < (int)board.idx_moves; i++) {
+                if (!strcmp(move2str(board.moves[i], tmp), ponder)) {
+                    found = true;
+                    break;
+                }
+            }
+            unmake_move();
+            board.ply = save_ply;
+            board.idx_moves = save_idx;
+            if (!found) ponder[0] = '\0';
+        }
         if(is_personality && time==0) // From play_material
         {
             person_sleep(0);
@@ -357,6 +386,51 @@ void unmake_null_move()
     // el hashkey completo guardado en el paso 2.
 }
 
+static int get_attacker(int square, int side, Bitmap occ)
+{
+    Bitmap atk;
+    int from;
+
+    if (side == WHITE) {
+        atk = board.white_pawns & BLACK_PAWN_ATTACKS[square] & occ;
+        if (atk) return first_one(atk);
+        atk = board.white_knights & KNIGHT_ATTACKS[square] & occ;
+        if (atk) return first_one(atk);
+        atk = board.white_bishops & DIAG_ATTACKS[square] & occ;
+        while (atk) { from = first_one(atk); if (!(FREEWAY[from][square] & occ)) return from; atk ^= BITSET[from]; }
+        atk = board.white_rooks & LINE_ATTACKS[square] & occ;
+        while (atk) { from = first_one(atk); if (!(FREEWAY[from][square] & occ)) return from; atk ^= BITSET[from]; }
+        atk = board.white_queens & (LINE_ATTACKS[square] | DIAG_ATTACKS[square]) & occ;
+        while (atk) { from = first_one(atk); if (!(FREEWAY[from][square] & occ)) return from; atk ^= BITSET[from]; }
+        atk = board.white_king & KING_ATTACKS[square] & occ;
+        if (atk) return first_one(atk);
+    } else {
+        atk = board.black_pawns & WHITE_PAWN_ATTACKS[square] & occ;
+        if (atk) return first_one(atk);
+        atk = board.black_knights & KNIGHT_ATTACKS[square] & occ;
+        if (atk) return first_one(atk);
+        atk = board.black_bishops & DIAG_ATTACKS[square] & occ;
+        while (atk) { from = first_one(atk); if (!(FREEWAY[from][square] & occ)) return from; atk ^= BITSET[from]; }
+        atk = board.black_rooks & LINE_ATTACKS[square] & occ;
+        while (atk) { from = first_one(atk); if (!(FREEWAY[from][square] & occ)) return from; atk ^= BITSET[from]; }
+        atk = board.black_queens & (LINE_ATTACKS[square] | DIAG_ATTACKS[square]) & occ;
+        while (atk) { from = first_one(atk); if (!(FREEWAY[from][square] & occ)) return from; atk ^= BITSET[from]; }
+        atk = board.black_king & KING_ATTACKS[square] & occ;
+        if (atk) return first_one(atk);
+    }
+    return -1;
+}
+
+static int see(int square, int side, int captured_value, Bitmap occ)
+{
+    int from = get_attacker(square, side, occ);
+    if (from == -1) return 0;
+
+    occ ^= BITSET[from];
+    int attacker_value = piece_mvv[board.pz[from] & 7];
+    return captured_value - see(square, !side, attacker_value, occ);
+}
+
 int quiescence(int alpha, int beta, int ply, int max_ply)
 {
     int k, j;
@@ -386,9 +460,16 @@ int quiescence(int alpha, int beta, int ply, int max_ply)
     movegenCaptures();
     for (k = board.ply_moves[ply]; k < board.ply_moves[ply + 1] && ok_time_kb; k++)
     {
+        // Skip losing captures (SEE < 0)
+        if (!board.moves[k].is_ep) {
+            int victim = board.moves[k].capture & 7;
+            int see_val = see(board.moves[k].to, board.side, piece_mvv[victim], board.all_pieces);
+            if (see_val < 0) continue;
+            // Delta pruning: skip captures that can't raise alpha
+            if (score + piece_mvv[victim] + 200 < alpha) continue;
+        }
         make_move(board.moves[k]);
         inodes++;
-        //if(npslimit) test_npslimit();
         score = -quiescence(-beta, -alpha, ply + 1, max_ply);
         unmake_move();
         if (score >= beta)
@@ -424,6 +505,11 @@ int alphaBeta(int alpha, int beta, int depth, int ply, int max_ply)
     if (depth == 0)
     {
         return quiescence(alpha, beta, ply, max_ply);
+    }
+
+    // Check extension: only when deep enough to avoid search explosion
+    if (inCheck() && depth >= 4) {
+        depth++;
     }
 
     if (!movegen())
@@ -472,18 +558,34 @@ int alphaBeta(int alpha, int beta, int depth, int ply, int max_ply)
         move = board.moves[k];
         make_move(move);
         inodes++;
-        //if(npslimit) test_npslimit();
-        score = -alphaBeta(-beta, -alpha, depth - 1, ply + 1, max_ply);
+        // LMR: reduce late quiet moves
+        if (depth >= 3 && k - desde >= 3 && !move.capture && !move.promotion && !inCheck()) {
+            int R = 1;
+            if (depth >= 6) R++;
+            if (k - desde >= 6) R++;
+            int rd = depth - 1 - R;
+            if (rd < 1) rd = 1;
+            score = -alphaBeta(-beta, -alpha, rd, ply + 1, max_ply);
+            if (score > alpha) {
+                score = -alphaBeta(-beta, -alpha, depth - 1, ply + 1, max_ply);
+            }
+        } else {
+            score = -alphaBeta(-beta, -alpha, depth - 1, ply + 1, max_ply);
+        }
         unmake_move();
 
         if (score > best_score) {
             best_score = score;
             if (score >= beta)
             {
-                // Se encontro poda Beta (Fail-hard beta cut-off)
-                flag = FLAG_LOWERBOUND; // Determinar el flag aqu?
+                if (!move.capture && !move.promotion)
+                {
+                    killer_moves[ply][1] = killer_moves[ply][0];
+                    killer_moves[ply][0] = move;
+                    history[move.piece][move.to] += depth * depth;
+                }
+                flag = FLAG_LOWERBOUND;
 
-                // --- TT STORE ---
                 storeEntry(board.hashkey, best_score, depth, flag, move);
                 return beta;
             }
@@ -523,7 +625,6 @@ void orderMoves( int ply, Move ttMove )
     if (ttMove.from != 0 || ttMove.to != 0) {
         for (k = board.ply_moves[ply]; k < board.ply_moves[ply + 1]; k++) {
             if (board.moves[k].from == ttMove.from && board.moves[k].to == ttMove.to) {
-                // Mover ttMove al inicio de la lista de movimientos
                 Move temp = board.moves[k];
                 board.moves[k] = board.moves[board.ply_moves[ply]];
                 board.moves[board.ply_moves[ply]] = temp;
@@ -536,9 +637,33 @@ void orderMoves( int ply, Move ttMove )
     {
         moveOrder[i].move = board.moves[k];
         n++;
-        make_move(board.moves[k]);
-        moveOrder[i].score = functionEval();
-        unmake_move();
+
+        if (board.moves[k].capture) {
+            int attacker = board.moves[k].piece & 7;
+            int victim = board.moves[k].capture & 7;
+            int mvv_lva = piece_mvv[victim] * 10 - piece_mvv[attacker];
+            if (board.moves[k].is_ep) {
+                moveOrder[i].score = 1000000 + mvv_lva;
+            } else {
+                int see_val = see(board.moves[k].to, board.side, piece_mvv[victim], board.all_pieces);
+                if (see_val > 0)
+                    moveOrder[i].score = 2000000 + mvv_lva;
+                else if (see_val == 0)
+                    moveOrder[i].score = 1000000 + mvv_lva;
+                else
+                    moveOrder[i].score = -1000000 + mvv_lva;
+            }
+        }
+        else {
+            make_move(board.moves[k]);
+            moveOrder[i].score = functionEval();
+            unmake_move();
+            if (board.moves[k].from == killer_moves[ply][0].from && board.moves[k].to == killer_moves[ply][0].to)
+                moveOrder[i].score += 500;
+            else if (board.moves[k].from == killer_moves[ply][1].from && board.moves[k].to == killer_moves[ply][1].to)
+                moveOrder[i].score += 400;
+            moveOrder[i].score += history[board.moves[k].piece][board.moves[k].to];
+        }
     }
     quick_sort( 0, n-1);
     for (i = 0, k = board.ply_moves[ply]; i < n; k++, i++)
@@ -582,9 +707,9 @@ void quick_sort(int low, int high)
 
         while( i < j )
         {
-            while( (moveOrder[i].score <= moveOrder[pivot].score) && (i<high) ) i++;
+            while( (moveOrder[i].score >= moveOrder[pivot].score) && (i<high) ) i++;
 
-            while(moveOrder[j].score>moveOrder[pivot].score) j--;
+            while(moveOrder[j].score<moveOrder[pivot].score) j--;
 
             if(i<j)
             {
