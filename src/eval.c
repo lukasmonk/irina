@@ -335,7 +335,6 @@ int eval() {
                     score += PENALTY_BACKWARD_PAWN;
         }
 
-        square = first_one(temp);
     }
 
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

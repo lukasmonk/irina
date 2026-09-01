@@ -320,7 +320,6 @@ int eval_steven(void) {
         // - distance from opponent king
         score += PAWN_OPPONENT_DISTANCE[DISTANCE[square][whitekingsquare]];
 
-        square = first_one(temp);
     }
 
     // ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

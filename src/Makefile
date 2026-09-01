@@ -4,8 +4,8 @@ OBJS = build/main.o build/loop.o build/board.o build/data.o build/util.o \
        build/tt.o build/book.o
 
 CC = gcc
-CFLAGS = -std=gnu17 -m64 -O2 -DNDEBUG
-LDFLAGS = -m64 -static -static-libgcc
+CFLAGS = -std=gnu17 -m64 -O3 -flto=2 -DNDEBUG
+LDFLAGS = -m64 -static -static-libgcc -O3 -flto=2 -s
 
 ifeq ($(OS),Windows_NT)
 CFLAGS += -DWIN32

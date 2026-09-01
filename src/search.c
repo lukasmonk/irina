@@ -70,35 +70,35 @@ void quick_sort(int low, int high);
     // printf("]");
 // }
 
-// void test_npslimit()
-// {
-//     long unsigned int nps, ms;
+void test_npslimit()
+{
+    long unsigned int nps, ms;
 
-//     if(npslimit == 0) return;
+    if(npslimit == 0) return;
 
-//     ms = get_ms() - time_ini;
-//     if(ms==0) ms = 1;
-//     nps = (long unsigned int) (inodes * 1000 / ms);
+    ms = get_ms() - time_ini;
+    if(ms==0) ms = 1;
+    nps = (long unsigned int) (inodes * 1000 / ms);
 
-//     while (nps > npslimit)
-//     {
-//         #ifdef WIN32
-//             Sleep(10);
-//         #else
-//             usleep(10000);
-//         #endif
-//         ms = get_ms() - time_ini;
-//         if(ms==0) ms = 1;
-//         nps = (long unsigned int) (inodes * 1000 / ms);
-//         if ((time_end && (time_end < get_ms())) || bioskey())
-//         {
-//             ok_time_kb = false;
-//             break;
-//         }
-//     }
+    while (nps > npslimit)
+    {
+        #ifdef WIN32
+            Sleep(10);
+        #else
+            usleep(10000);
+        #endif
+        ms = get_ms() - time_ini;
+        if(ms==0) ms = 1;
+        nps = (long unsigned int) (inodes * 1000 / ms);
+        if ((time_end && (time_end < get_ms())) || bioskey())
+        {
+            ok_time_kb = false;
+            break;
+        }
+    }
 
 
-// }
+}
 
 void play(int depth, int time)
 {
@@ -177,7 +177,7 @@ void play_irina(int depth, int time)
             {
                 sprintf(str_score, "cp %d", score);
             }
-            //test_npslimit();
+            test_npslimit();
             ms = get_ms() - time_ini;
             if (ms == 0)
             {
@@ -442,7 +442,7 @@ int quiescence(int alpha, int beta, int ply, int max_ply)
           return alphaBeta(alpha, beta, 1, ply, max_ply);
     }
 
-    triangularLength[ply] = ply;
+    triangularLength[ply] = 0;
 
     score = functionEval();
 

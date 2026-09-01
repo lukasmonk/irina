@@ -18,7 +18,7 @@
 #include "protos.h"
 #include "globals.h"
 
-#define VERSION "0.23"
+#define VERSION "0.24"
 
 
 void begin(void)
@@ -114,6 +114,9 @@ void loop(void)
                 fprintf(flog, "option name OwnBook type check default true\n");
                 fprintf(flog, "option name OwnBookFile type string default irina.bin\n");
                 printf("option name NpsLimit type spin default 0 min 0 max 30000\n");
+                #ifdef LOG
+                fprintf(flog, "option name NpsLimit type spin default 0 min 0 max 30000\n");
+                #endif
                 fprintf(flog, "uciok\n");
             #endif
 

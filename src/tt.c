@@ -15,7 +15,7 @@ void init_ttTable(int max_mb)
     register_max = 1024L * 1024L * max_mb / sizeof (TtEntry);
     if(register_max % 2 == 1) register_max += 1;
     ttTable = (TtEntry *)calloc(register_max, sizeof(TtEntry));
-    memset(ttTable, 0, sizeof(&ttTable));
+    memset(ttTable, 0, sizeof(TtEntry) * register_max);
 }
 
 
